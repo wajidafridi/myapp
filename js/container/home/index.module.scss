@@ -1,0 +1,66 @@
+.container {
+    padding: 0 2rem;
+    .title {
+      margin: 0;
+      line-height: 1.15;
+      font-size: 4rem;
+      text-align: center;
+    }
+    .main {
+      min-height: 100vh;
+      padding: 4rem 0 2rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      .inputContainer{
+          width: 500px;
+          display: flex;
+          margin-right: auto;
+          margin-bottom: 40px;
+          flex-direction: column;
+          .title{
+              font-size: 1.5rem;
+              font-weight: normal;
+              text-align: left;
+              margin-bottom: 20px;
+          }
+          .inputbox{
+            padding: 10px 15px;
+            height: 120px;
+            margin-bottom: 30px;
+          }
+          .submitBtn{
+              margin-left: auto;
+              padding: 10px 15px;
+              border-radius: 4px;
+              border: 1px solid #007bff;
+              color: white;
+              font-size: 16px;
+              background-color: #007bff;
+              cursor: pointer;
+          }
+      }
+      .feedbackList{
+        border-top: 1px solid rgba(black,0.7);
+        padding-top: 15px;
+        .title{
+          font-size: 1.5rem;
+          font-weight: normal;
+          text-align: left;
+          margin-bottom: 20px;
+        }
+      }
+    }
+    
+    .footer {
+      display: flex;
+      flex: 1;
+      padding: 2rem 0;
+      border-top: 1px solid #eaeaea;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+  
+  
+  
