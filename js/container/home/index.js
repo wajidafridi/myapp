@@ -4,7 +4,7 @@ import axios from 'axios';
 // @import styles
 import styles from './index.module.scss'
 
-const URL="http://mygoapp-backend.herokuapp.com/";
+const URL="https://mygoapp-backend.herokuapp.com/";
 // const URL="http://localhost:8000/";
 
 export default function Home() {
