@@ -4,10 +4,10 @@ import axios from 'axios';
 // @import styles
 import styles from './index.module.scss'
 
-const URL="https://mygoapp-backend.herokuapp.com/";
+const URL = "https://mynode-backend.herokuapp.com/";
 // const URL = "http://localhost:8000/";
 
-export default function Home() {
+const Home = () => {
     const [feedbackList, setFeedbackList] = useState([])
     const [feedbackValue, setFeedbackValue] = useState('')
 
@@ -22,7 +22,7 @@ export default function Home() {
             }
         })
             .then(res => {
-                if(res && res?.data){
+                if (res && res?.data) {
                     setFeedbackList(res.data)
                 }
             }).catch(err => {
@@ -38,7 +38,6 @@ export default function Home() {
                 }
             })
                 .then(res => {
-                    console.log("res of post", res);
                     if (res && res?.data) {
                         setFeedbackList(res.data);
                         setFeedbackValue('');
@@ -47,6 +46,21 @@ export default function Home() {
                     console.log("err", err, err.name, err.msg);
                 })
         }
+    }
+
+    function deleteFeedback(id) {
+        axios.delete(`${URL}api/feedback/${id}`, {
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+            .then(res => {
+                if (res && res?.data) {
+                    setFeedbackList(res.data);
+                }
+            }).catch(err => {
+                console.log("err", err, err.name, err.msg);
+            })
     }
 
     return (
@@ -71,7 +85,8 @@ export default function Home() {
                 <div className={styles.feedbackList}>
                     <h5 className={styles.title}>Feedback:</h5>
                     {feedbackList && feedbackList.length > 0 ? feedbackList.map((item, index) =>
-                        <div key={index} className={styles.feedbackItem}>{index + 1}) {item.description}</div>
+                        <div key={index} className={styles.feedbackItem}>{index + 1}) {item.description}
+                            <button className={styles.deleteBtn} onClick={() => { deleteFeedback(item.id) }}>delete</button></div>
                     ) : "No Record Found"}
                 </div>
 
@@ -83,3 +98,5 @@ export default function Home() {
         </div>
     )
 }
+
+export default Home;

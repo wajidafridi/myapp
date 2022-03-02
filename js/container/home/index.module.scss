@@ -49,6 +49,19 @@
           text-align: left;
           margin-bottom: 20px;
         }
+        .feedbackItem{
+          display: flex;
+          margin-bottom: 15px;
+          justify-content: space-between;
+          .deleteBtn{
+            padding: 7px;
+            background-color: red;
+            color: white;
+            border: 1px solid red;
+            border-radius: 5px;
+            cursor: pointer;
+          }
+        }
       }
     }
     
