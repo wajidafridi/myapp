@@ -5,7 +5,7 @@ import axios from 'axios';
 import styles from './index.module.scss'
 
 const URL="https://mygoapp-backend.herokuapp.com/";
-// const URL="http://localhost:8000/";
+// const URL = "http://localhost:8000/";
 
 export default function Home() {
     const [feedbackList, setFeedbackList] = useState([])
@@ -16,15 +16,15 @@ export default function Home() {
     }, [])
 
     function getAllFeedbackData() {
-        axios.get(`${URL}getallfeedback`, {
+        axios.get(`${URL}api/feedback`, {
             headers: {
                 'content-type': 'application/json'
             }
         })
             .then(res => {
-                console.log("get res", res);
-                const feedback = res.data;
-                setFeedbackList(feedback)
+                if(res && res?.data){
+                    setFeedbackList(res.data)
+                }
             }).catch(err => {
                 console.log("err", err, err.name, err.msg);
             })
@@ -32,16 +32,17 @@ export default function Home() {
 
     function submitFeedback() {
         if (feedbackValue && feedbackValue !== "") {
-            axios.post(`${URL}createfeedback`, { description: feedbackValue }, {
+            axios.post(`${URL}api/feedback`, { description: feedbackValue }, {
                 headers: {
-                    "Content-Type": "application/json",
-                    'Access-Control-Allow-Origin': '*',
-                    "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept"
+                    "Content-Type": "application/json"
                 }
             })
                 .then(res => {
                     console.log("res of post", res);
-                    // getAllFeedbackData();
+                    if (res && res?.data) {
+                        setFeedbackList(res.data);
+                        setFeedbackValue('');
+                    }
                 }).catch(err => {
                     console.log("err", err, err.name, err.msg);
                 })
@@ -70,7 +71,7 @@ export default function Home() {
                 <div className={styles.feedbackList}>
                     <h5 className={styles.title}>Feedback:</h5>
                     {feedbackList && feedbackList.length > 0 ? feedbackList.map((item, index) =>
-                        <div key={index} className={styles.feedbackItem}>{item.description}</div>
+                        <div key={index} className={styles.feedbackItem}>{index + 1}) {item.description}</div>
                     ) : "No Record Found"}
                 </div>
 
