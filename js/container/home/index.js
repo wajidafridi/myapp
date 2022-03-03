@@ -16,14 +16,14 @@ const Home = () => {
     }, [])
 
     function getAllFeedbackData() {
-        axios.get(`${URL}api/feedback`, {
+        axios.get(`${URL}api/feedbacks`, {
             headers: {
                 'content-type': 'application/json'
             }
         })
             .then(res => {
-                if (res && res?.data) {
-                    setFeedbackList(res.data)
+                if (res && !res?.data?.error && res?.data?.data) {
+                    setFeedbackList(res?.data?.data)
                 }
             }).catch(err => {
                 console.log("err", err, err.name, err.msg);
@@ -32,14 +32,14 @@ const Home = () => {
 
     function submitFeedback() {
         if (feedbackValue && feedbackValue !== "") {
-            axios.post(`${URL}api/feedback`, { description: feedbackValue }, {
+            axios.post(`${URL}api/feedbacks`, { description: feedbackValue }, {
                 headers: {
                     "Content-Type": "application/json"
                 }
             })
                 .then(res => {
-                    if (res && res?.data) {
-                        setFeedbackList(res.data);
+                    if (res && !res?.data?.error && res?.data?.data) {
+                        getAllFeedbackData();
                         setFeedbackValue('');
                     }
                 }).catch(err => {
@@ -49,14 +49,14 @@ const Home = () => {
     }
 
     function deleteFeedback(id) {
-        axios.delete(`${URL}api/feedback/${id}`, {
+        axios.delete(`${URL}api/feedbacks/${id}`, {
             headers: {
                 "Content-Type": "application/json"
             }
         })
             .then(res => {
-                if (res && res?.data) {
-                    setFeedbackList(res.data);
+                if (res && !res?.data?.error) {
+                    getAllFeedbackData();
                 }
             }).catch(err => {
                 console.log("err", err, err.name, err.msg);
@@ -86,7 +86,7 @@ const Home = () => {
                     <h5 className={styles.title}>Feedback:</h5>
                     {feedbackList && feedbackList.length > 0 ? feedbackList.map((item, index) =>
                         <div key={index} className={styles.feedbackItem}>{index + 1}) {item.description}
-                            <button className={styles.deleteBtn} onClick={() => { deleteFeedback(item.id) }}>delete</button></div>
+                            <button className={styles.deleteBtn} onClick={() => { deleteFeedback(item._id) }}>delete</button></div>
                     ) : "No Record Found"}
                 </div>
 
