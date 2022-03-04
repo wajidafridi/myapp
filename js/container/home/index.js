@@ -10,6 +10,8 @@ const URL = "https://mynode-backend.herokuapp.com/";
 const Home = () => {
     const [feedbackList, setFeedbackList] = useState([])
     const [feedbackValue, setFeedbackValue] = useState('')
+    const [feedbackEditValue, setFeedbackEditValue] = useState('')
+    const [activeIndex, setActiveIndex] = useState(null)
 
     useEffect(() => {
         getAllFeedbackData();
@@ -63,6 +65,28 @@ const Home = () => {
             })
     }
 
+    function editFeedback() {
+        if (feedbackEditValue && feedbackEditValue !== "") {
+            const id = feedbackList[activeIndex]['_id'];
+
+            axios.put(`${URL}api/feedbacks/${id}`, { description: feedbackEditValue }, {
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+                .then(res => {
+                    if (res && !res?.data?.error) {
+                        getAllFeedbackData();
+                        setTimeout(() => {
+                            setActiveIndex(null);
+                        }, 500);
+                    }
+                }).catch(err => {
+                    console.log("err", err, err.name, err.msg);
+                })
+        }
+    }
+
     return (
         <div className={styles.container}>
             <Head>
@@ -86,12 +110,26 @@ const Home = () => {
                     <h5 className={styles.title}>Feedback:</h5>
                     {feedbackList && feedbackList.length > 0 ? feedbackList.map((item, index) =>
                         <div key={index} className={styles.feedbackItem}>{index + 1}) {item.description}
-                            <button className={styles.deleteBtn} onClick={() => { deleteFeedback(item._id) }}>delete</button></div>
+                            <button className={styles.editBtn} onClick={() => { setActiveIndex(index) }}>edit</button>
+                            <button className={styles.deleteBtn} onClick={() => { deleteFeedback(item._id) }}>delete</button>
+                        </div>
                     ) : "No Record Found"}
                 </div>
-
             </main>
-
+            {(activeIndex !== null) &&
+                <div className={styles.popupWrapper}>
+                    <div className={styles.popupContainer}>
+                        <h5 className={styles.title}>Edit</h5>
+                        <button className={styles.crossIcon} onClick={()=>{setActiveIndex(null)}}>&#10060;</button>
+                        <textarea 
+                            className={styles.inputbox} 
+                            onChange={e => { setFeedbackEditValue(e.target.value) }}
+                            value={feedbackEditValue || feedbackList[activeIndex]?.description || ''} 
+                        />
+                        <button className={styles.submitBtn} onClick={editFeedback}>Save</button>
+                    </div>
+                </div>
+            }
             <footer className={styles.footer}>
                 © 2022 My App. All rights reserved.
             </footer>
