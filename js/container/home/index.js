@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import Head from 'next/head'
 import axios from 'axios';
+// @import modules
+import Loader from "../../modules/Loader";
 // @import styles
 import styles from './index.module.scss'
 
@@ -12,12 +14,14 @@ const Home = () => {
     const [feedbackValue, setFeedbackValue] = useState('')
     const [feedbackEditValue, setFeedbackEditValue] = useState('')
     const [activeIndex, setActiveIndex] = useState(null)
+    const [isLoading, setIsLoading] = useState(false)
 
     useEffect(() => {
         getAllFeedbackData();
     }, [])
 
     function getAllFeedbackData() {
+        setIsLoading(true)
         axios.get(`${URL}api/feedbacks`, {
             headers: {
                 'content-type': 'application/json'
@@ -27,7 +31,9 @@ const Home = () => {
                 if (res && !res?.data?.error && res?.data?.data) {
                     setFeedbackList(res?.data?.data)
                 }
+                setIsLoading(false)
             }).catch(err => {
+                setIsLoading(false)
                 console.log("err", err, err.name, err.msg);
             })
     }
@@ -89,6 +95,7 @@ const Home = () => {
 
     return (
         <div className={styles.container}>
+            <Loader isLoading={isLoading} />
             <Head>
                 <title>My App</title>
                 <meta name="description" content="My first app" />
@@ -120,11 +127,11 @@ const Home = () => {
                 <div className={styles.popupWrapper}>
                     <div className={styles.popupContainer}>
                         <h5 className={styles.title}>Edit</h5>
-                        <button className={styles.crossIcon} onClick={()=>{setActiveIndex(null)}}>&#10060;</button>
-                        <textarea 
-                            className={styles.inputbox} 
+                        <button className={styles.crossIcon} onClick={() => { setActiveIndex(null) }}>&#10060;</button>
+                        <textarea
+                            className={styles.inputbox}
                             onChange={e => { setFeedbackEditValue(e.target.value) }}
-                            value={feedbackEditValue || feedbackList[activeIndex]?.description || ''} 
+                            value={feedbackEditValue || feedbackList[activeIndex]?.description || ''}
                         />
                         <button className={styles.submitBtn} onClick={editFeedback}>Save</button>
                     </div>
